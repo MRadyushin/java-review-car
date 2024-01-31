@@ -132,7 +132,7 @@ public class CarStorageImpl implements CarStorage {
             log.info("Машина" + carId + " не удалена / не найдена");
             throw new NotFoundException("Машина с id " + carId + " не найдена");
         }
-        return "Машина с id " + carId + " удалён";
+        return "Машина с id " + carId + " удалена";
     }
 
     @Override
