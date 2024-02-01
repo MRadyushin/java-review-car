@@ -34,7 +34,11 @@ CREATE TABLE IF NOT EXISTS users
     email    VARCHAR(255) NOT NULL,
     login    VARCHAR(255) NOT NULL,
     name     VARCHAR(255) NOT NULL,
-    birthday DATE         NOT NULL
+    birthday DATE         NOT NULL,
+    UNIQUE(login),
+    UNIQUE(email)
+
+
 );
 
 CREATE TABLE IF NOT EXISTS cars
@@ -65,14 +69,6 @@ CREATE TABLE IF NOT EXISTS car_types
     FOREIGN KEY (type_id) REFERENCES types (type_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS friends
-(
-    user_id   INTEGER NOT NULL,
-    friend_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    FOREIGN KEY (friend_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, friend_id)
-);
 
 CREATE TABLE IF NOT EXISTS cars_directors
 (
