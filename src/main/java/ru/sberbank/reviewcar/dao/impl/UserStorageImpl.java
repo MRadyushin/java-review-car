@@ -28,6 +28,11 @@ public class UserStorageImpl implements UserStorage {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     *
+     * @param id - id пользователя
+     * @return возвращается пользователь по id
+     */
     @Override
     public User getUser(int id) {
         User user;
@@ -43,6 +48,10 @@ public class UserStorageImpl implements UserStorage {
         return user;
     }
 
+    /**
+     *
+     * @return возвращаются все пользователи
+     */
     @Override
     public Collection<User> getAllUsers() {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from users");
@@ -58,6 +67,10 @@ public class UserStorageImpl implements UserStorage {
         return users;
     }
 
+    /**
+     *
+     * создание пользователя
+     */
     @Override
     public User createUser(User user) {
         String sql = "INSERT INTO users (email, login, name, birthday) VALUES (?, ?, ?, ?)";
@@ -75,6 +88,10 @@ public class UserStorageImpl implements UserStorage {
         return user;
     }
 
+    /**
+     *
+     * изменение пользователя
+     */
     @Override
     public User updateUser(User user) {
         String sql = "UPDATE users SET email=?, login=?, name=?, birthday=? WHERE user_id=?";
@@ -82,6 +99,10 @@ public class UserStorageImpl implements UserStorage {
         return user;
     }
 
+    /**
+     *
+     * удаление пользователя
+     */
     @Override
     public String deleteUser(int userId) {
         try {
@@ -95,6 +116,12 @@ public class UserStorageImpl implements UserStorage {
         return "Пользователь " + userId + " удалён.";
     }
 
+    /**
+     *
+     * @param userId - id пользователя
+     * @param targetUser - пользователь
+     * @return возвращает рекомендованные авто
+     */
     @Override
     public List<Integer> getRecommendations(int userId, User targetUser) {
         Map<User, List<Integer>> usersWithLikes = new HashMap<>();

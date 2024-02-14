@@ -25,6 +25,7 @@ public class CarService {
     private final DirectorStorage directorRepository;
     private final EventService eventService;
 
+
     public Car getCar(int id) {
         Car car;
         try {
@@ -79,26 +80,6 @@ public class CarService {
             }
         }
         return carForResult;
-    }
-
-    public Collection<Car> getCarsByDirector(Integer directorId) {
-        Director director = directorRepository.findById(directorId).orElseThrow(() -> new NotFoundException("404"));
-        List<Director> director2 = directorRepository.getDirectorsByCarId(directorId);
-        List<Car> cars = new ArrayList<>(carStorageDb.findAllCars());
-
-       /* Comparator<Car> comparator = null;
-        if (sortBy.equals("director")) {
-            comparator = Comparator.comparing(Car::getId);
-        } else if (sortBy.equals("likes")) {
-            comparator = Comparator.comparingInt(Car::getRate).reversed();
-        } else {
-            String message = String.format("Сортировка по типу %s отсутствует", sortBy);
-            throw new IllegalStateException(message);
-        }*/
-
-        return cars.stream()
-                .filter(car -> !car.getDirectors().isEmpty())
-                .collect(Collectors.toList());
     }
 
 

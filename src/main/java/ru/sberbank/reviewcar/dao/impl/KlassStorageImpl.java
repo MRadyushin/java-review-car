@@ -18,12 +18,21 @@ public class KlassStorageImpl {
 
     private final JdbcTemplate jdbcTemplate;
 
+    /**
+     *
+      * @return возвращает все классы авто
+     */
     public Collection<Klass> getAllKlass() {
         String sqlGetAllKlass = "SELECT * FROM klass";
         List<Klass> listKlass = jdbcTemplate.query(sqlGetAllKlass, CarStorageImpl::makeKlass);
         return listKlass;
     }
 
+    /**
+     *
+     * @param id - id класса
+     * @return возвращает класс авто по id
+     */
     public Klass getKlassById(int id) {
         String sqlGetKlass = "SELECT * FROM klass WHERE klass_id = ?";
         List<Klass> klassById = jdbcTemplate.query(sqlGetKlass, CarStorageImpl::makeKlass, id);

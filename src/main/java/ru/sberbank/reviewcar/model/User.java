@@ -1,5 +1,7 @@
 package ru.sberbank.reviewcar.model;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Data;
 

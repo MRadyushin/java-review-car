@@ -17,6 +17,11 @@ import java.util.List;
 public class EventStorageImpl implements EventStorage {
     private final JdbcTemplate jdbcTemplate;
 
+    /**
+     *
+     * @param userId -id пользователя
+     * @return возвращает все события которые делал пользователь
+     */
     @Override
     public List<Event> getFeedByUserId(int userId) {
         final String sql = "SELECT * FROM feed WHERE user_id = ? ";
@@ -24,6 +29,10 @@ public class EventStorageImpl implements EventStorage {
         return jdbcTemplate.query(sql, new EventMapper(), userId);
     }
 
+    /**
+     *
+     * добавление события
+     */
     @Override
     public void createEvent(Event event) {
         final String sql = "INSERT INTO feed (user_id, timestamp, event_type, operation, entity_id) VALUES (?, ?, ?, ?, ?)";

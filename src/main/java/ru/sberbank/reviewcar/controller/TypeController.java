@@ -25,15 +25,20 @@ public class TypeController {
 
     private final TypeService typeService;
 
-
+    /**
+     *
+     * @получение всех типов авто
+     */
     @GetMapping
     private Collection<Type> getAllTypes() {
-
-
             return typeService.getAllTypes();
-
     }
 
+    /**
+     *
+     * @param id -id типа
+     * @return - получение типа по id
+     */
     @GetMapping(value = "/{id}")
     private Type getTypeById(@PathVariable int id) {
         return typeService.getTypeById(id);

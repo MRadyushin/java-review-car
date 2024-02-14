@@ -19,11 +19,20 @@ public class KlassController {
 
     private final KlassService klassService;
 
+    /**
+     *
+     * @return - получение всех классов авто
+     */
     @GetMapping
     private Collection<Klass> getAllKlass() {
         return klassService.getAllKlass();
     }
 
+    /**
+     *
+     * @param id - id класса
+     * @return - вывод класса по id
+     */
     @GetMapping(value = "/{id}")
     private Klass getKlassById(@PathVariable int id) {
         return klassService.getKlassById(id);

@@ -18,11 +18,21 @@ public class TypeStorageImpl {
 
     private final JdbcTemplate jdbcTemplate;
 
+    /**
+     *
+     * @return возвращает все типы авто
+     */
     public Collection<Type> getAllTypes() {
         String sqlGetAllTypes = "SELECT TYPE_NAME as typeName, TYPE_ID as typeId FROM types";
         List<Type> listTypes = jdbcTemplate.query(sqlGetAllTypes, CarStorageImpl::makeType);
         return listTypes;
     }
+
+    /**
+     *
+     * @param id - id пользователя
+     * @return возвращается тип авто по id
+     */
 
     public Type getTypeById(int id) {
         String sqlGetType = "SELECT TYPE_NAME as typeName, TYPE_ID as typeId FROM types WHERE type_id = ?";

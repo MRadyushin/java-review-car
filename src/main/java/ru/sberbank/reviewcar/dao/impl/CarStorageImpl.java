@@ -37,6 +37,10 @@ public class CarStorageImpl implements CarStorage {
 
     private final DirectorStorageImpl directorStorage;
 
+    /**
+     *
+     * запрос на получение машины по id
+     */
     @Override
     public List<Car> getCar(List<Integer> id) {
         String inSql = String.join(",", Collections.nCopies(id.size(), "?"));
@@ -59,6 +63,11 @@ public class CarStorageImpl implements CarStorage {
             "WHERE f.CAR_ID IN (%s)", inSql), id.toArray(), this::makeCar)));
     }
 
+
+    /**
+     *
+     * запрос на получение всех машины
+     */
     @Override
     public Collection<Car> getAllCars() {
 
@@ -80,6 +89,10 @@ public class CarStorageImpl implements CarStorage {
             "LEFT JOIN types g ON g.type_id = fg.type_id", this::makeCar);
     }
 
+    /**
+     *
+     * запрос на создание машины
+     */
     @Override
     public Car addCar(Car car) {
         String sqlInsertCar =
@@ -104,7 +117,10 @@ public class CarStorageImpl implements CarStorage {
 
         return car;
     }
-
+    /**
+     *
+     * запрос на изменение машины
+     */
     @Override
     public Car updateCar(Car car) {
         String sqlUpdateCar =
@@ -121,7 +137,10 @@ public class CarStorageImpl implements CarStorage {
 
         return car;
     }
-
+    /**
+     *
+     * запрос на удаление машины
+     */
     @Override
     public String deleteCar(int carId) {
         try {
@@ -134,21 +153,30 @@ public class CarStorageImpl implements CarStorage {
         }
         return "Машина с id " + carId + " удалена";
     }
-
+    /**
+     *
+     * запрос на создание лайка для машины
+     */
     @Override
     public void makeLike(int idCar, int idUser) {
         String sqlInsertLikes = "INSERT INTO likes (car_id, user_id) VALUES (?, ?)";
         jdbcTemplate.update(sqlInsertLikes, idCar, idUser);
         log.info("User с id=" + idUser + " поставил лайк car с id = " + idCar);
     }
-
+    /**
+     *
+     * запрос на удаление лайка для машины
+     */
     @Override
     public void deleteLike(int idCar, int idUser) {
         String sqlDelete = "DELETE FROM likes WHERE car_id = ? AND user_id = ?";
         jdbcTemplate.update(sqlDelete, idCar, idUser);
         log.info("User с id=" + idUser + " удалил свой лайк car с id=" + idCar);
     }
-
+    /**
+     *
+     * запрос на вывод популярных машины
+     */
     @Override
     public Collection<Car> getPopularCars(int count) {
         String sqlPopular = "SELECT f.car_id AS carid, f.name AS name, f.description AS description, " +
@@ -173,13 +201,19 @@ public class CarStorageImpl implements CarStorage {
         }
         return popularCars;
     }
-
+    /**
+     *
+     * запрос на получение лайка для машины
+     */
     @Override
     public List<Integer> getCarLikes(Integer id) {
         String sqlCarLikesById = "SELECT * FROM likes WHERE car_id = ?";
         return jdbcTemplate.query(sqlCarLikesById, (rs, rowNum) -> rs.getInt("user_id"), id);
     }
-
+    /**
+     *
+     * запрос на вывод класса машины
+     */
     @Override
     public Klass checkKlass(Car car) {
         Integer klassId = car.getKlass().getId();
@@ -191,14 +225,20 @@ public class CarStorageImpl implements CarStorage {
         Klass klass = klassById.get(0);
         return klass;
     }
-
+    /**
+     *
+     * запрос на вывод типа машины for тест
+     */
     @Override
     public List<Type> getTypes(int idCar) {
         String sqlTypes =
             "SELECT g.type_id AS typeid, g.type_name AS typename FROM car_types fg JOIN types g ON fg.type_id = g.type_id WHERE fg.car_id = ?";
         return jdbcTemplate.query(sqlTypes, CarStorageImpl::makeType, idCar);
     }
-
+    /**
+     *
+     * запрос на вывод типов машины
+     */
     @Override
     public List<Type> checkType(Car car) {
         List<Type> carTypes = new ArrayList<>();
@@ -219,7 +259,10 @@ public class CarStorageImpl implements CarStorage {
         }
         return carTypes;
     }
-
+    /**
+     *
+     * запрос на связку машины и типа
+     */
     @Override
     public void insertCarTypes(Car car) {
         String sqlInsertCarType = "INSERT INTO car_types (car_id, type_id) VALUES (?, ?)";
@@ -229,14 +272,20 @@ public class CarStorageImpl implements CarStorage {
             }
         }
     }
-
+    /**
+     *
+     * запрос на удаление связки авто и типа
+     */
     @Override
     public void deleteCarTypes(Car car) {
         String sqlDeleteCarTypes = "DELETE FROM car_types WHERE car_id = ?";
         jdbcTemplate.update(sqlDeleteCarTypes, car.getId());
     }
 
-
+    /**
+     *
+     * запрос на связку машины и директора + удаление пред связки машины
+     */
     @Override
     public void addDirectorsByCarId(int carId, int directorId) {
         String sqlInsert = "INSERT INTO cars_directors (car_id, director_id) VALUES (?, ?)";
@@ -244,7 +293,10 @@ public class CarStorageImpl implements CarStorage {
         jdbcTemplate.update(sqlDelete, carId);
         jdbcTemplate.update(sqlInsert, carId, directorId);
     }
-
+    /**
+     *
+     * запрос на вывод инфы проищводителя по авто
+     */
     @Override
     public Collection<Director> findDirectorsByCarId(Integer carId) {
         String sqlSelect =
@@ -252,7 +304,10 @@ public class CarStorageImpl implements CarStorage {
         return jdbcTemplate.query(sqlSelect, directorMapper, carId);
     }
 
-
+    /**
+     *
+     * запрос на вывод все инфо на авто по всем авто
+     */
     @Override
     public Collection<Car> findAllCars() {
         String sql = "SELECT f.*, " +
@@ -271,13 +326,19 @@ public class CarStorageImpl implements CarStorage {
 
         return jdbcTemplate.query(sql, carRowMapper);
     }
-
+    /**
+     *
+     * запрос на удаление связки производителя и машиын
+     */
     @Override
     public void deleteDirectorsByCarId(Integer carId) {
         String sql = "DELETE FROM cars_directors WHERE car_id = ?";
         jdbcTemplate.update(sql, carId);
     }
-
+    /**
+     *
+     * создание класса
+     */
     public static Klass makeKlass(ResultSet rs, int rowNum) throws SQLException {
         return Klass.builder()
             .id(rs.getInt("klass_id"))
@@ -285,6 +346,10 @@ public class CarStorageImpl implements CarStorage {
             .build();
     }
 
+    /**
+     *
+     * запрос на получение лайков
+     */
     public Collection<Car> getLikesCars(int userId) {
 
         String sqlSelect = "SELECT " +
@@ -307,6 +372,10 @@ public class CarStorageImpl implements CarStorage {
         return jdbcTemplate.query(sqlSelect, this::makeCar, userId);
     }
 
+    /**
+     *
+     * запрос на получение популярных авто по году или типу
+     */
     @Override
     public Collection<Car> getPopularCarsByTypeAndYear(int count, Integer typeId, Integer year) {
         String sql = "SELECT " +
@@ -333,6 +402,10 @@ public class CarStorageImpl implements CarStorage {
         return jdbcTemplate.query(sql, this::makeCar);
     }
 
+    /**
+     *
+     * поиск авто по производителю
+     */
     @Override
     public Collection<Car> getSearchCarsByDirector(String query) {
         String sql = "SELECT " +
@@ -358,6 +431,10 @@ public class CarStorageImpl implements CarStorage {
         return jdbcTemplate.query(sql, this::makeCar);
     }
 
+    /**
+     *
+     * поиск авто по наименованю
+     */
     @Override
     public Collection<Car> getSearchCarsByTitle(String query) {
         String sql = "SELECT " +
@@ -381,6 +458,10 @@ public class CarStorageImpl implements CarStorage {
         return jdbcTemplate.query(sql, this::makeCar);
     }
 
+    /**
+     *
+     * создание типа
+     */
     public static Type makeType(ResultSet rs, int rowNum) throws SQLException {
         return Type.builder()
             .id(rs.getInt("typeId"))
@@ -388,6 +469,10 @@ public class CarStorageImpl implements CarStorage {
             .build();
     }
 
+    /**
+     *
+     * создание авто
+     */
     public Collection<Car> makeCar(ResultSet rs) throws SQLException {
         Map<Integer, Car> carsMap = new LinkedHashMap<>();
         while (rs.next()) {

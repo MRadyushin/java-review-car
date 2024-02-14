@@ -9,7 +9,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class EventMapper implements RowMapper<Event> {
-
+    /**
+     * маппинг действий
+     * @param rs the {@code ResultSet} to map (pre-initialized for the current row)
+     * @param rowNum the number of the current row
+     * @return
+     * @throws SQLException
+     * JdbcTemplate вызывает метод mapRow для каждой строки в наборе результатов и передает ее номер строки в качестве аргумента.
+     * Метод возвращает объект определенного типа
+     */
     @Override
     public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Event.builder()

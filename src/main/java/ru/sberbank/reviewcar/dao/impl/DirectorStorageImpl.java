@@ -26,6 +26,22 @@ public class DirectorStorageImpl implements DirectorStorage {
     private final JdbcTemplate jdbcTemplate;
     private final DirectorMapper directorMapper;
 
+    /**
+     * класс констант-запросов
+     */
+    private static class DirectorSql {
+        static final String SELECT_DIRECTORS_ALL = "SELECT * FROM directors";
+        static final String SELECT_DIRECTORS_FIND_BY_ID = "SELECT * FROM directors WHERE id = ?";
+        static final String UPDATE_DIRECTORS = "UPDATE directors SET name = ? WHERE id = ?";
+        static final String DELETE_DIRECTORS = "DELETE FROM directors WHERE id = ?";
+
+    }
+
+    /**
+     *
+     * @return возвращает всех производителей
+     */
+
     @Override
     public Collection<Director> findAll() {
         try {
@@ -35,6 +51,11 @@ public class DirectorStorageImpl implements DirectorStorage {
         }
     }
 
+    /**
+     *
+     * @param directorId - id производителя
+     * @return возвращает производителя по id
+     */
     @Override
     public Optional<Director> findById(Integer directorId) {
         try {
@@ -46,6 +67,10 @@ public class DirectorStorageImpl implements DirectorStorage {
         }
     }
 
+    /**
+     *
+     * создание произврдителя
+     */
     @Override
     public Director save(Director director) {
         try {
@@ -66,6 +91,10 @@ public class DirectorStorageImpl implements DirectorStorage {
         }
     }
 
+    /**
+     *
+     * изменение производителя
+     */
     @Override
     public Director update(Director director) {
         try {
@@ -79,6 +108,10 @@ public class DirectorStorageImpl implements DirectorStorage {
         return director;
     }
 
+    /**
+     * удаление производителя
+     * @param directorId - id производителя
+     */
     @Override
     public void remove(Integer directorId) {
         try {
@@ -89,6 +122,11 @@ public class DirectorStorageImpl implements DirectorStorage {
         }
     }
 
+    /**
+     *
+     * @param carId - id авто
+     * @return возвращается производитель для опред авто
+     */
     public List<Director> getDirectorsByCarId(Integer carId) {
         String statement = "SELECT * FROM directors AS d " +
                 "LEFT JOIN cars_directors AS fd " +
@@ -97,15 +135,13 @@ public class DirectorStorageImpl implements DirectorStorage {
         return jdbcTemplate.query(statement, this::makeDirector, carId);
     }
 
+    /**
+     *
+     * создатель производителя
+     */
     private Director makeDirector(ResultSet rs, int rowNum) throws SQLException {
         return Director.builder().id(rs.getInt("id")).name(rs.getString("name")).build();
     }
 
-    private static class DirectorSql {
-        static final String SELECT_DIRECTORS_ALL = "SELECT * FROM directors";
-        static final String SELECT_DIRECTORS_FIND_BY_ID = "SELECT * FROM directors WHERE id = ?";
-        static final String UPDATE_DIRECTORS = "UPDATE directors SET name = ? WHERE id = ?";
-        static final String DELETE_DIRECTORS = "DELETE FROM directors WHERE id = ?";
 
-    }
 }

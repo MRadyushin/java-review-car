@@ -14,6 +14,15 @@ import java.util.List;
 
 @Component
 public class CarRowMapper implements RowMapper<Car> {
+    /**
+     * маппингавто
+     * @param rs the {@code ResultSet} to map (pre-initialized for the current row)
+     * @param rowNum the number of the current row
+     * @return
+     * @throws SQLException
+     * JdbcTemplate вызывает метод mapRow для каждой строки в наборе результатов и передает ее номер строки в качестве аргумента.
+     * Метод возвращает объект определенного типа
+     */
     @Override
     public Car mapRow(ResultSet rs, int rowNum) throws SQLException {
         List<Type> types = new ArrayList<>();

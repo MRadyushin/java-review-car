@@ -23,6 +23,10 @@ public class ReviewStorageImpl implements ReviewStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
+    /**
+     *
+     * создание отзыва
+     */
     @Override
     public Review addReview(Review review) {
         String sqlInsertReview = "INSERT INTO reviews (content, is_positive, user_id, car_id) " +
@@ -42,6 +46,10 @@ public class ReviewStorageImpl implements ReviewStorage {
         return review;
     }
 
+    /**
+     *
+     * изменение отзыва
+     */
     @Override
     public Review updateReview(Review review) {
         String sqlUpdateReview = "UPDATE reviews SET content = ?, is_positive = ? WHERE review_id = ?";
@@ -53,6 +61,10 @@ public class ReviewStorageImpl implements ReviewStorage {
         return getReview(review.getReviewId());
     }
 
+    /**
+     * удаление отзыва
+     *
+     */
     @Override
     public void deleteReview(int reviewId) {
         String sqlDelete = "DELETE FROM reviews WHERE review_id = ?";
@@ -60,6 +72,11 @@ public class ReviewStorageImpl implements ReviewStorage {
         log.info("Отзыв c id=" + reviewId + " удалён");
     }
 
+    /**
+     *
+     * @param reviewId - id отзыва
+     * @return возвращается отзыв по id
+     */
     @Override
     public Review getReview(int reviewId) {
         String sqlSelect = "SELECT * FROM reviews WHERE review_id = ?";
@@ -77,6 +94,12 @@ public class ReviewStorageImpl implements ReviewStorage {
         return review;
     }
 
+    /**
+     *
+     * @param carId - id авто
+     * @param count - количество отзывов на вывод
+     * @return возвращаются отзывы со связкой на авто,по которому его оставили
+     */
     @Override
     public Collection<Review> getAllReviews(Integer carId, Integer count) {
         StringBuilder sqlQuery = new StringBuilder("SELECT DISTINCT ON (r.review_id) r.review_id, r.content, r.is_positive, r.user_id, r.car_id, ru.is_positive " +
@@ -116,6 +139,13 @@ public class ReviewStorageImpl implements ReviewStorage {
          });
     }
 
+    /**
+     *
+     * @param reviewId - id отзыва
+     * @param userId - id пользователя
+     * @param  - лайк/дизлайк
+     * установка лайка/дизлайка на отзыв
+     */
     @Override
     public void makeLikeOrDislike(int reviewId, int userId, boolean grade) {
         String sqlInsert = "INSERT INTO review_useful (review_id, is_positive, user_id) VALUES (?, ?, ?)";
@@ -127,7 +157,13 @@ public class ReviewStorageImpl implements ReviewStorage {
             log.info("Пользователь с id=" + userId + " поставил дизлайк отзыву с id=" + reviewId);
         }
     }
-
+    /**
+     *
+     * @param reviewId - id отзыва
+     * @param userId - id пользователя
+     * @param  - лайк/дизлайк
+     * снятие лайка/дизлайка на отзыв
+     */
     @Override
     public void deleteLikeOrDislike(int reviewId, int userId, boolean grade) {
         String sqlDelete = "DELETE FROM review_useful WHERE user_id = ? AND review_id = ? AND is_positive = ?";
@@ -140,6 +176,12 @@ public class ReviewStorageImpl implements ReviewStorage {
         }
     }
 
+    /**
+     *
+     * @param reviewId - id отзыва
+     *
+     * @return возвращается рейтинг отзывов( лайки - дизлайки)
+     */
     public Integer calculateReviewUseful(int reviewId) {
         Integer rating;
         String sql = "SELECT COUNT(*) FROM review_useful WHERE review_id = ? AND is_positive = ?";
